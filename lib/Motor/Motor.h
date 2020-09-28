@@ -18,11 +18,14 @@ class Motor
     byte stepPin, dirPin, enPin;
     uint16_t pulsePeriod_us;
     uint32_t pulseCounter = 0;
-    uint32_t currentPulseInterval=0;
+    float currentIntervalTime = 0.0f;
+    uint32_t previousIntervalTime = 0;
+
     bool currentDirection;
     bool side;
 
     public:
+    float desiredPulseInterval = 0.0f;
     void init(byte,byte,byte,bool,uint16_t);
     void enable();
     void disable();

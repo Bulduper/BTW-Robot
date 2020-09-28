@@ -21,6 +21,9 @@ enum ConnectionStatus
 	apMode
 };
 
+IPAddress convertIPToInt32(uint8_t,uint8_t,uint8_t,uint8_t);
+IPAddress convertIPToInt32(String);
+
 class WirelessDataClass
 {
 protected:
@@ -45,8 +48,7 @@ public:
 	void stopUdp();
 	void send(String msg, uint32_t ipAddress);
 	void send(String msg);
-	IPAddress convertIPToInt32(uint8_t,uint8_t,uint8_t,uint8_t);
-	IPAddress convertIPToInt32(String);
+
 	void setTargetIpAddress(uint32_t);
 	void setLastRemoteIpAddress() { mControllerIpAddress = mLastRemoteIpAddress.v4(); }
 	void listen();

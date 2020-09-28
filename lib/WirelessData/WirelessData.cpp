@@ -4,6 +4,23 @@
 
 #include "WirelessData.h"
 
+IPAddress convertIPToInt32(uint8_t a,uint8_t b ,uint8_t c ,uint8_t d )
+{
+	return IPAddress(a,b,c,d);
+}
+
+
+//SOMETHING WRONG HERE
+IPAddress convertIPToInt32(String ip_string)
+{
+	uint8_t a,b,c,d;
+
+	sscanf(ip_string.c_str(),"%d.%d.%d.%d",&a,&b,&c,&d);
+
+	return IPAddress(a,b,c,d);
+}
+
+
 bool WirelessDataClass::connectToWiFi(String ssid, String password)
 {
 	WiFi.begin(ssid, password);
@@ -80,15 +97,7 @@ void WirelessDataClass::send(String msg)
 	send(msg, mControllerIpAddress);
 }
 
-IPAddress WirelessDataClass::convertIPToInt32(uint8_t a,uint8_t b ,uint8_t c ,uint8_t d )
-{
-	return IPAddress(a,b,c,d);
-}
 
-IPAddress WirelessDataClass::convertIPToInt32(String ip_string)
-{
-	return IPAddress();
-}
 
 
 void WirelessDataClass::chainSend(byte key, String message)

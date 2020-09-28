@@ -30,7 +30,7 @@ void ICACHE_RAM_ATTR ISR();
 
 bool remoteControllerFound = false;
 bool sendTelemetry = true;
-String telemetryReceiverIPAddress;
+String telemetryReceiverIPAddress = "192.168.1.18";
 int udpIdealPeriod, udpRealPeriod;
 
 void setup()
@@ -117,8 +117,9 @@ void sendTelemetryPacket()
 {
   WirelessData.send(PacketCreator::createTelemetryPacket(
       Regulator.getCurrentAngle(),
-      Regulator.getRightVelocity()),
-    WirelessData.convertIPToInt32(192,168,1,18));
+      Regulator.getRightVelocity(),
+      motors.getRPulseInterval()),
+    convertIPToInt32(192,168,1,18));
 }
 
 void setSteeringData(ReceivedDataPacket data)
