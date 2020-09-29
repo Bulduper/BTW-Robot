@@ -14,6 +14,12 @@
 #define MAX_SPEED_CMPS 100.0f
 #define MAX_TURN_SPEED 1.0f
 
+#define DEAD_ANGLE 50.0f
+#define WAKEUP_ANGLE 1.0f
+
+//TO DO:
+//Make offset angle editable through WiFi controller
+
 class BalanceRegulator
 {
 private:

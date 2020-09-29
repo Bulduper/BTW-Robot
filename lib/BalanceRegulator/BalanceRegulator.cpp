@@ -21,16 +21,11 @@ void BalanceRegulator::setRelativeTurn(byte relTurn)
 float BalanceRegulator::estimateSpeed(float dt)
 {
     float av_cmps_vel = ((L_rps_vel + R_rps_vel) / 2.0f) * 23.25f;                    //23.25 [cm] is distanse per rotation, in cm per second
-    float sensor_cmps_vel = (currentAngle - previousAngle) * DEG_TO_RAD / dt * 9.0f; //9.0f is a distance between wheel axis and sensor in [cm], in cm per second
+    float sensor_cmps_vel = (currentAngle - previousAngle) * DEG_TO_RAD / dt * 9.0f; //9.0f [cm] is the distance between wheel axis and MPU, in cm per second
     float estimatedSpeed = -av_cmps_vel + sensor_cmps_vel;
-
-    //float av_cmps_vel = ((L_rps_vel + R_rps_vel) / 2.0f);
-    //float sensor_cmps_vel = (currentAngle - previousAngle);
-    //float estimatedSpeed = -av_cmps_vel + sensor_cmps_vel*25.0f;
 
     static float filteredEstimatedSpeed;
     filteredEstimatedSpeed = 0.5 * filteredEstimatedSpeed + 0.5 * estimatedSpeed; //low pass filter
-    //Serial.printf("wheelSpeed:%f\tsensorSpeed:%f\n",av_cmps_vel,sensor_cmps_vel);
     return filteredEstimatedSpeed;
 }
 
@@ -48,14 +43,14 @@ void BalanceRegulator::regulateLoop()
     float mpuAngle = MPU6050_getAngle(dt);
     currentAngle = mpuAngle + angleOffset;
 
-    //WirelessData.chainSend(0, String(currentAngle));
-
-    if (fabsf(currentAngle) < 0.5f)
+    if (fabsf(currentAngle) < WAKEUP_ANGLE)
         motors.enable();
 
-    if (fabsf(currentAngle) > 50.0f)
+    if (fabsf(currentAngle) > DEAD_ANGLE)
     {
         mAverageRpsVelocity = 0.0f;
+        L_rps_vel = 0.0f;
+        R_rps_vel = 0.0f;
         motors.disable();
     }
     if (motors.isEnabled())
@@ -70,19 +65,22 @@ void BalanceRegulator::regulateLoop()
 
         mAverageRpsVelocity +=regulatedSpeed;
         
-        mAverageRpsVelocity = constrain(mAverageRpsVelocity,-15.0f,15.0f);
+        mAverageRpsVelocity = constrain(mAverageRpsVelocity,-6.0f,6.0f);
 
         L_rps_vel = mAverageRpsVelocity - turnSpeed;
         R_rps_vel = mAverageRpsVelocity + turnSpeed;
 
         motors.setSpeed(L_rps_vel, R_rps_vel);
-
-        //WirelessData.chainSend(1, String(targetAngle - currentAngle));
-        //WirelessData.chainSend(2, String(estimatedSpeed));
-        //WirelessData.chainSend(3, String(L_rps_vel));
     }
     previousAngle = currentAngle;
 }
+
+/*
+    Proportional - integral regulator
+    It checks the difference between the speed we want and the actual speed.
+    Optionally, if the I-term !=0, any long term differences will add up causing correction.
+    The output of this regulation can be perceived as the suitable, ideal angle that would result in no speed error.
+*/
 
 float BalanceRegulator::PI_Speed(float estSpeed, float expSpeed, float dt) //this is a PI regulator
 {
@@ -91,10 +89,15 @@ float BalanceRegulator::PI_Speed(float estSpeed, float expSpeed, float dt) //thi
     errorSum += speedError;
     errorSum = constrain(errorSum,-100000.0,100000.0);
     float output = speed_pid_P * speedError + speed_pid_I * errorSum * dt;
-    Serial.printf("error: %f\tsum: %f\n",speedError, errorSum);
 
     return output;
 }
+/*
+    Proportional - derivative regulator
+    This one checks the difference between the ideal angle (from the previous regulator) and the actual angle measured by MPU.
+    D - term lets the regulation proceed faster when the error is growing and slower when we are achieving the good angle.
+    The output of this regulation is basically the delta speed that is later added to current motors speed causing the proper speed adjustment.
+*/
 
 float BalanceRegulator::PD_Angle(float currAngle, float targetAngle, float dt) //this is a PD regulator
 {

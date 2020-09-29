@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <Motor.h>
 
-#define PULSE_PERIOD_us 20
+#define PULSE_PERIOD_us 16
 
 class MotorController
 {
@@ -22,7 +22,7 @@ class MotorController
     void setSpeed(float leftRPS, float rightRPS);
     void run();
 
-    float getRPulseInterval() {return rightStepper.desiredPulseInterval;}
+    float getRPulseInterval() {return rightStepper.desiredStepInterval;}
 
 };
 extern MotorController motors;

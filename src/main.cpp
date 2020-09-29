@@ -29,7 +29,7 @@ void setIncomingDataPeriod(ReceivedDataPacket data);
 void ICACHE_RAM_ATTR ISR();
 
 bool remoteControllerFound = false;
-bool sendTelemetry = true;
+bool sendTelemetry = false;
 String telemetryReceiverIPAddress = "192.168.1.18";
 int udpIdealPeriod, udpRealPeriod;
 
@@ -157,7 +157,6 @@ void setIncomingDataFPeriod(ReceivedDataPacket data)
 void onDataReceived(char *data)
 {
   static unsigned int lT;
-  //Serial.printf("%u\t%u\tdataRec: %s\n", millis(), millis() - lT, data);
   udpRealPeriod = millis()-lT;
   lT = millis();
 

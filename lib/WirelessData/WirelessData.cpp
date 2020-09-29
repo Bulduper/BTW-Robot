@@ -87,7 +87,6 @@ void WirelessDataClass::send(String msg, uint32_t ipAddress)
 	if (!isUdpReady)
 		return;
 	udp.beginPacket(IPAddress(ipAddress), mReceiverPort);
-	//Serial.printf("dataSent: %s\n",msg.c_str());
 	udp.write(msg.c_str());
 	udp.endPacket();
 }
@@ -96,8 +95,6 @@ void WirelessDataClass::send(String msg)
 {
 	send(msg, mControllerIpAddress);
 }
-
-
 
 
 void WirelessDataClass::chainSend(byte key, String message)

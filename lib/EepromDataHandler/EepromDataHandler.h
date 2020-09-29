@@ -5,6 +5,9 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
+//TO DO:
+//Make this class more universal. Allow flexible variable saving.
+
 class EepromDataHandlerClass
 {
     private:
