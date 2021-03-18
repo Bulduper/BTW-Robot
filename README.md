@@ -39,5 +39,11 @@ where ```c``` would be around 0.98 (depends on time constant).
 
 The above solution is called complementary filter.
 
+## Regulation algorithm
+![Diagram](/Photos/regulation_diagram.png?raw=true  "Regulation algorithm diagram")
 
-More documentation soon...
+We've got two closed-loop PID regulators working together in a cascade. The input for the outer regulator is speed error. Error is obtained by subtracting target value and estimated velocity value. The latter involves both absolute motor speed and relative head's speed. This way we can effectively take into account robot tilting as well.
+  
+## Remote control & telemetry
+I used WiFi feature of ESP8266 to remotely control the robot.
+Android app sends JSON packets containing steering data via UDP protocol to the ESP. In return ESP sends packets containing speed and tilt values the same way.
