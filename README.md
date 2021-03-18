@@ -4,7 +4,7 @@
 ## Balancing Two-Wheeled Robot
 This repository contains all the code files for ESP8266 microcontroller regarding the BTW-Robot project. 
 
-The other part of code is the *android app* to control the robot. The app will have its own repo soon.
+The other part of code is the *android app* to control the robot remotely. [LINK TO REPO](https://github.com/Bulduper/BTW-Robot-Android-App) 
 
 ## A short description
 
