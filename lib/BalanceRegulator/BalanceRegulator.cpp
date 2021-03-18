@@ -59,11 +59,11 @@ void BalanceRegulator::regulateLoop()
 
         float targetAngle = PI_Speed(estimatedSpeed, expectedSpeed, dt);
 
-        float regulatedSpeed = PD_Angle(currentAngle, targetAngle, dt);
+        float regulatedDeltaSpeed = PD_Angle(currentAngle, targetAngle, dt);
 
-        //regulatedSpeed = constrain(regulatedSpeed,-5.0f,5.0f);             //constrain the acceleration
+        //regulatedDeltaSpeed = constrain(regulatedDeltaSpeed,-5.0f,5.0f);             //constrain the acceleration
 
-        mAverageRpsVelocity +=regulatedSpeed;
+        mAverageRpsVelocity +=regulatedDeltaSpeed;
         
         mAverageRpsVelocity = constrain(mAverageRpsVelocity,-6.0f,6.0f);
 
