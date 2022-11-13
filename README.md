@@ -1,6 +1,8 @@
 # BTW-Robot
 ![Photo of robot](/Photos/miniature.jpg?raw=true  "Balancing robot")
 
+## [YouTube video](https://www.youtube.com/watch?v=bfnd0wN4B1s)
+[![YouTube video](/Photos/BTWRobot_video_img.png)](https://www.youtube.com/watch?v=bfnd0wN4B1s)
 ## Balancing Two-Wheeled Robot
 This repository contains all the code files for ESP8266 microcontroller regarding the BTW-Robot project. 
 
